@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: {{ k8s_namespace }}
+data:
+  elasticsearch.yml: |
+    node.data: ${NODE_DATA}
+    node.master: ${NODE_MASTER}
+    network.host: 0.0.0.0
+    cluster.name: {{ cluster_name }}
+    node.name: ${HOSTNAME}
+    discovery.zen:
+      minimum_master_nodes: ${MINIMUM_MASTER_NODES}
+      ping.unicast.hosts: elasticsearch-cluster
+  log4j2.properties: |
+    status = error
+    appender.console.type = Console
+    appender.console.name = console
+    appender.console.layout.type = PatternLayout
+    appender.console.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] %marker%m%n
+    rootLogger.level = info
+    rootLogger.appenderRef.console.ref = console

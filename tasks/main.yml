@@ -1,0 +1,15 @@
+---
+- name: Create template directory
+  file: path=kubernetes state=directory mode=0755
+
+- name: Instruct kubectl to use specified cluster
+  command: "kubectl config set-context {{ k8s_cluster }}"
+
+- name: Deploy elasticsearch
+  include: elasticsearch.yml
+  tags: elasticsearch
+
+- name: Deploy elasticsearch exporter
+  include: elasticsearch-exporter.yml
+  when: enable_exporter
+  tags: elasticsearch-exporter

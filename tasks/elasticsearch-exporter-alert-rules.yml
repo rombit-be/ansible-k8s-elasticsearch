@@ -1,0 +1,7 @@
+- name: Generate elasticsearch exporter alert rules
+  template:
+    src: elasticsearch-exporter-alert-rules.yml.j2
+    dest: kubernetes/elasticsearch-exporter-alert-rules.yml
+
+- name: Create elasticsearch exporter servicemonitor
+  command: "kubectl apply -f kubernetes/elasticsearch-exporter-alert-rules.yml -n {{ k8s_namespace }}"

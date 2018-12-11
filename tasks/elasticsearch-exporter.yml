@@ -1,0 +1,25 @@
+- name: Generate elasticsearch exporter deployment
+  template:
+    src: elasticsearch-exporter-deployment.yml.j2
+    dest: kubernetes/elasticsearch-exporter-deployment.yml
+
+- name: Create elasticsearch exporter deployment
+  command: "kubectl apply -f kubernetes/elasticsearch-exporter-deployment.yml -n {{ k8s_namespace }}"
+
+- name: Generate elasticsearch exporter service
+  template:
+    src: elasticsearch-exporter-service.yml.j2
+    dest: kubernetes/elasticsearch-exporter-service.yml
+
+- name: Create elasticsearch exporter service
+  command: "kubectl apply -f kubernetes/elasticsearch-exporter-service.yml -n {{ k8s_namespace }}"
+
+- name: Deploy elasticsearch exporter service monitor
+  include: elasticsearch-exporter-servicemonitor.yml
+  when: enable_prometheus_service_monitor
+  tags: elasticsearch-exporter-servicemonitor
+
+- name: Deploy elasticsearch exporter alert rules
+  include: elasticsearch-exporter-alert-rules.yml
+  when: enable_prometheus_alert_rules
+  tags: elasticsearch-exporter-alert-rules

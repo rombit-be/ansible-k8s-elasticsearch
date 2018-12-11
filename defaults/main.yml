@@ -1,0 +1,31 @@
+---
+k8s_cluster: this-cluster-should-not-exist
+elasticsearch_storage: 20Gi
+elasticsearch_storage_class: elasticsearch
+generate_storage_class: true
+k8s_namespace: elasticsearch
+ebs_iops_per_gb: 10
+elasticsearch_replicas: 3
+elasticsearch_minimum_master_nodes: 2
+cluster_name: elasticsearch
+elasticsearch_limit_memory: 4Gi
+elasticsearch_request_memory: "{{ elasticsearch_limit_memory }}"
+elasticsearch_java_memory: 2G
+curator_older_then_unit: months
+curator_older_then_unit_count: 2
+elasticsearch_cpu_request: 200m
+elasticsearch_cpu_limit: 1000m
+elasticsearch_add_backup_secrets: false
+
+es_environment: production
+
+elasticsearch_image: elasticsearch
+elasticsearch_image_version: 5.2.2
+
+enable_exporter: false
+elasticsearch_exporter_docker_version: 1.0.1
+enable_prometheus_service_monitor: "{{ enable_exporter }}"
+enable_prometheus_alert_rules: "{{ enable_exporter }}"
+
+disk_space_warning: 0.9
+min_available: 51%

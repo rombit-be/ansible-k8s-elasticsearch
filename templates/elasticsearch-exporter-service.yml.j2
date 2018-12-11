@@ -1,0 +1,14 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: p8s-elastic-exporter
+  namespace: {{ k8s_namespace }}
+  labels:
+    app: p8s-elastic-exporter
+spec:
+  ports:
+    - name: http-metrics
+      port: 9108
+      targetPort: 9108
+  selector:
+    app: p8s-elastic-exporter

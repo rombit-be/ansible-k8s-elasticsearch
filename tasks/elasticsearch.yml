@@ -1,0 +1,59 @@
+- name: Generate elasticsearch storage class
+  template:
+    src: elasticsearch-storageclass.yml.j2
+    dest: kubernetes/elasticsearch-storageclass.yml
+  when: generate_storage_class|bool
+
+- name: Generate elasticsearch configmap
+  template:
+    src: elasticsearch-configmap.yml.j2
+    dest: kubernetes/elasticsearch-configmap.yml
+
+- name: Generate elasticsearch secrets
+  template:
+    src: elasticsearch-secrets.yml.j2
+    dest: kubernetes/elasticsearch-secrets.yml
+  when: elasticsearch_add_backup_secrets|bool
+
+- name: Generate elasticsearch headless service
+  template:
+    src: elasticsearch-headless-service.yml.j2
+    dest: kubernetes/elasticsearch-headless-service.yml
+
+- name: Generate elasticsearch service
+  template:
+    src: elasticsearch-service.yml.j2
+    dest: kubernetes/elasticsearch-service.yml
+
+- name: Generate elasticsearch statefulset
+  template:
+    src: elasticsearch-statefulset.yml.j2
+    dest: kubernetes/elasticsearch-statefulset.yml
+
+- name: Generate elasticsearch pod PodDisruptionBudget
+  template:
+    src: elasticsearch-pod-disruption-budget.yml.j2
+    dest: kubernetes/elasticsearch-pod-disruption-budget.yml
+
+- name: Create elasticsearch storage class
+  command: "kubectl apply -f kubernetes/elasticsearch-storageclass.yml -n {{ k8s_namespace }}"
+  when: generate_storage_class|bool
+
+- name: Create elasticsearch configmap
+  command: "kubectl apply -f kubernetes/elasticsearch-configmap.yml -n {{ k8s_namespace }}"
+
+- name: Create elasticsearch secrets
+  command: "kubectl apply -f kubernetes/elasticsearch-secrets.yml -n {{ k8s_namespace }}"
+  when: elasticsearch_add_backup_secrets|bool
+
+- name: Create elasticsearch headless service
+  command: "kubectl apply -f kubernetes/elasticsearch-headless-service.yml -n {{ k8s_namespace }}"
+
+- name: Create elasticsearch service
+  command: "kubectl apply -f kubernetes/elasticsearch-service.yml -n {{ k8s_namespace }}"
+
+- name: Create elasticsearch statefulset
+  command: "kubectl apply -f kubernetes/elasticsearch-statefulset.yml -n {{ k8s_namespace }}"
+
+- name: Create elasticsearch PodDisruptionBudget
+  command: "kubectl apply -f kubernetes/elasticsearch-pod-disruption-budget.yml -n {{ k8s_namespace }}"

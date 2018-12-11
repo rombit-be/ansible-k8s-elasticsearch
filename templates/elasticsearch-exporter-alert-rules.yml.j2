@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ k8s_namespace }}-{{ cluster_name }}-elasticsearch-alerts
+  namespace: {{ k8s_namespace }}
+  labels:
+    prometheus: prometheus2
+    role: prometheus-rulefiles
+spec:
+  groups:
+  - name: elasticsearch.rules
+    rules:
+    - alert: ElasticsearchTooFewNodesRunning
+      expr: elasticsearch_cluster_health_number_of_nodes{cluster="{{ cluster_name }}"} < 3
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: "There are only {{ '{{' }}$value{{ '}}' }} < 3 ElasticSearch nodes running for cluster {{ cluster_name }}"
+        summary: "ElasticSearch running on less than 3 nodes"
+    - alert: ElasticsearchHeapTooHigh
+      expr: elasticsearch_jvm_memory_used_bytes{area="heap", cluster="{{ cluster_name }}"} / elasticsearch_jvm_memory_max_bytes{area="heap", cluster="{{ cluster_name }}"} > 0.9
+      for: 15m
+      labels:
+        severity: critical
+      annotations:
+        description: "ElasticSearch node {{ '{{' }}$labels.node{{ '}}' }} heap usage is high for cluster {{ cluster_name }}"
+        summary: The heap usage is over 90% for 15m
+    - alert: ElasticsearchDiskUsageLow
+      expr: (elasticsearch_filesystem_data_size_bytes{cluster="{{ cluster_name }}"} - elasticsearch_filesystem_data_free_bytes{cluster="{{ cluster_name }}"}) / elasticsearch_filesystem_data_size_bytes{cluster="{{ cluster_name }}"} > {{ disk_space_warning }}
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        description: "ElasticSearch node {{ '{{' }}$labels.node{{ '}}' }} disk usage is high for cluster {{ cluster_name }}"
+        summary: "The disk usage is over {{ disk_space_warning }} for 10m"

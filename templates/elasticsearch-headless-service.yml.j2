@@ -1,0 +1,15 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "elasticsearch-cluster"
+  namespace: {{ k8s_namespace }}
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  sessionAffinity: None
+  type: ClusterIP
+  ports:
+    - port: 9300
+      targetPort: 9300
+  selector:
+    app: "elasticsearch"

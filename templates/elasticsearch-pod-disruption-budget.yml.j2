@@ -1,0 +1,10 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: elasticsearch-budget
+  namespace: {{ k8s_namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: elasticsearch
+  minAvailable: {{ min_available }}

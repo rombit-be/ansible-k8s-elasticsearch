@@ -1,0 +1,7 @@
+- name: Generate elasticsearch exporter servicemonitor
+  template:
+    src: elasticsearch-exporter-servicemonitor.yml.j2
+    dest: kubernetes/elasticsearch-exporter-servicemonitor.yml
+
+- name: Create elasticsearch exporter servicemonitor
+  command: "kubectl apply -f kubernetes/elasticsearch-exporter-servicemonitor.yml -n {{ k8s_namespace }}"

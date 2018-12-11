@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ k8s_namespace }}-{{ cluster_name }}-elasticsearch-exporter
+  namespace: {{ k8s_namespace }}
+  labels:
+    prometheus-cluster: prometheus2
+spec:
+  jobLabel: elasticsearch
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+  selector:
+    matchLabels:
+      app: p8s-elastic-exporter
+  namespaceSelector:
+    matchNames:
+    - {{ k8s_namespace }}

@@ -11,13 +11,9 @@ cluster_name: elasticsearch
 elasticsearch_limit_memory: 4Gi
 elasticsearch_request_memory: "{{ elasticsearch_limit_memory }}"
 elasticsearch_java_memory: 2G
-curator_older_then_unit: months
-curator_older_then_unit_count: 2
 elasticsearch_cpu_request: 200m
 elasticsearch_cpu_limit: 1000m
 elasticsearch_add_backup_secrets: false
-
-es_environment: production
 
 elasticsearch_image: elasticsearch
 elasticsearch_image_version: 5.2.2
